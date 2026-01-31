@@ -1,6 +1,7 @@
 import yfinance as yf
 import pandas as pd
 import numpy as np
+import os
 import nltk
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -247,5 +248,6 @@ def details():
 
 # ================== RUN ==================
 if __name__ == "__main__":
-    print("🚀 TRADE ARCHITECT FINAL SERVER RUNNING ON PORT 5001")
-    app.run(port=5001, debug=True)
+    port = int(os.environ.get("PORT", 5001))
+    app.run(host="0.0.0.0", port=port)
+
