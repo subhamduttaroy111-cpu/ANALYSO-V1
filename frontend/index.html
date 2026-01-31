@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Trade Architect | Stock Analysis</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --bg:#f4f6f8;
+    --panel:#ffffff;
+    --border:#e5e7eb;
+    --blue:#2563eb;
+    --text:#111827;
+    --muted:#6b7280;
+}
+*{box-sizing:border-box;font-family:Inter,sans-serif}
+body{margin:0;background:var(--bg);color:var(--text)}
+
+header{
+    background:var(--panel);
+    border-bottom:1px solid var(--border);
+    padding:14px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+header h1{margin:0;font-size:1.3rem;font-weight:800}
+header span{color:var(--blue)}
+
+.controls{
+    padding:16px;
+    display:flex;
+    justify-content:center;
+}
+.controls-box{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:6px;
+    display:flex;
+    gap:8px;
+    width:100%;
+    max-width:480px;
+}
+
+/* HERO */
+.hero{
+    max-width:1100px;
+    margin:30px auto 10px;
+    background:linear-gradient(135deg,#ffffff,#f8fafc);
+    border:1px solid var(--border);
+    border-radius:22px;
+    padding:32px;
+    display:grid;
+    grid-template-columns:1.2fr 0.8fr;
+    gap:32px;
+}
+.hero h2{
+    font-size:1.9rem;
+    font-weight:800;
+    margin:0 0 12px;
+}
+.hero p{
+    color:var(--muted);
+    line-height:1.6;
+}
+.hero ul{
+    padding-left:18px;
+    margin-top:14px;
+}
+.hero li{margin-bottom:8px;font-weight:500}
+.hero-visual{
+    border-radius:18px;
+    background:
+        linear-gradient(135deg, rgba(37,99,235,.08), rgba(37,99,235,.02)),
+        repeating-linear-gradient(
+            45deg,
+            #e5e7eb,
+            #e5e7eb 1px,
+            transparent 1px,
+            transparent 14px
+        );
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    color:var(--blue);
+}
+
+/* FORM */
+select{
+    flex:1;
+    border:none;
+    padding:12px;
+    font-size:.95rem;
+    outline:none;
+}
+button{
+    background:var(--blue);
+    color:#fff;
+    border:none;
+    padding:12px 26px;
+    border-radius:10px;
+    font-weight:600;
+    cursor:pointer;
+}
+button:hover{opacity:.9}
+
+.container{padding:20px}
+
+/* LOADER */
+.loader{
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:80px 20px;
+    color:var(--muted);
+    text-align:center;
+}
+.spinner{
+    width:42px;
+    height:42px;
+    border:4px solid #e5e7eb;
+    border-top:4px solid var(--blue);
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    margin-bottom:16px;
+}
+@keyframes spin{
+    0%{transform:rotate(0deg)}
+    100%{transform:rotate(360deg)}
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:18px;
+}
+.card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:18px;
+    cursor:pointer;
+    transition:.25s;
+}
+.card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 12px 24px rgba(0,0,0,.08);
+}
+.card h3{margin:0 0 6px;font-size:1.05rem;font-weight:700}
+.price{font-size:1.4rem;font-weight:700;margin-bottom:6px}
+.row{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted)}
+
+.badge{
+    font-size:.7rem;
+    padding:4px 8px;
+    border-radius:6px;
+    font-weight:700;
+}
+.bull{background:#dcfce7;color:#166534}
+.neutral{background:#f3f4f6;color:#374151}
+.bear{background:#fee2e2;color:#991b1b}
+
+/* MODAL */
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:1000;
+}
+.modal-box{
+    background:#fff;
+    width:96%;
+    max-width:900px;
+    border-radius:18px;
+    padding:22px;
+    max-height:92vh;
+    overflow-y:auto;
+}
+iframe{border:none;border-radius:12px}
+
+/* MOBILE */
+@media(max-width:768px){
+    .hero{
+        grid-template-columns:1fr;
+        padding:26px;
+    }
+    .hero h2{font-size:1.6rem}
+    .controls-box{
+        flex-direction:column;
+    }
+    button{width:100%}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>ANALYSO <span><small>V1</small> </span></h1>
+    <small style="color:var(--muted)">Analysis Only • NSE</small>
+</header>
+
+<div class="hero">
+    <div>
+        <h2>Institutional Market Scanning</h2>
+        <p>
+            Rule-based analysis engine designed to identify high-probability
+            opportunities across intraday, swing and long-term horizons.
+        </p>
+        <ul>
+            <li>Momentum & structure-driven logic</li>
+            <li>No emotions — probability focused</li>
+            <li>Live chart validation</li>
+        </ul>
+    </div>
+    <div class="hero-visual">
+        Market Structure Engine
+    </div>
+</div>
+
+<div class="controls">
+    <div class="controls-box">
+        <select id="mode">
+            <option value="INTRADAY">🚀 Intraday</option>
+            <option value="SWING">🌊 Swing</option>
+            <option value="LONG_TERM">💎 Long Term</option>
+        </select>
+        <button onclick="runScan()">SCAN</button>
+    </div>
+</div>
+
+<div class="container">
+    <div id="loader" class="loader">
+        <div class="spinner"></div>
+        <b>Scanning market…</b>
+        <small>Applying institutional logic</small>
+    </div>
+    <div id="grid" class="grid"></div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal" onclick="closeModal(event)">
+    <div class="modal-box">
+        <h2 id="mTitle"></h2>
+        <div style="margin:18px 0">
+            <iframe id="tv_iframe" style="width:100%;height:420px;"></iframe>
+        </div>
+        <p><b>Sector:</b> <span id="mSector">-</span></p>
+        <p><b>52W High:</b> <span id="mHigh">-</span></p>
+        <h4>Why this stock?</h4>
+        <ul id="mReasons"></ul>
+        <br>
+        <button onclick="closeModal()">Close</button>
+    </div>
+</div>
+
+<script>
+const API_URL="http://127.0.0.1:5001";
+let STOCKS=[];
+
+async function runScan(){
+    loader.style.display="flex";
+    grid.innerHTML="";
+
+    const mode=document.getElementById("mode").value;
+    const res=await fetch(`${API_URL}/scan`,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({mode})
+    });
+    const json=await res.json();
+
+    loader.style.display="none";
+    if(json.status==="success"){
+        STOCKS=json.data;
+        renderCards(STOCKS);
+    }
+}
+
+function renderCards(data){
+    if(data.length===0){
+        grid.innerHTML="<p>No setups found.</p>";
+        return;
+    }
+    data.forEach((s,i)=>{
+        let cls=s.bias.includes("BULL")?"bull":s.bias.includes("BEAR")?"bear":"neutral";
+        grid.innerHTML+=`
+        <div class="card" onclick="openModal(${i})">
+            <h3>${s.symbol}</h3>
+            <div class="price">₹${s.ltp}</div>
+            <span class="badge ${cls}">${s.bias}</span>
+            <div class="row" style="margin-top:8px">
+                <span>SL: ${s.execution.sl}</span>
+                <span>CONF: ${s.score}%</span>
+                <span>TGT: ${s.execution.target1}</span>
+            </div>
+        </div>`;
+    });
+}
+
+async function openModal(i){
+    const s=STOCKS[i];
+    modal.style.display="flex";
+    mTitle.innerText=s.symbol;
+
+    loadChart(s.symbol);
+    mReasons.innerHTML=s.reason.map(r=>`<li>${r}</li>`).join("");
+
+    const res=await fetch(`${API_URL}/get_stock_details`,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({symbol:s.symbol})
+    });
+    const json=await res.json();
+    if(json.status==="success"){
+        mSector.innerText=json.fundamentals.sector;
+        mHigh.innerText=json.fundamentals.high52;
+    }
+}
+
+function loadChart(symbol){
+    symbol=symbol.replace(".NS","");
+    const mode=document.getElementById("mode").value;
+    let interval="15";
+    if(mode==="SWING") interval="D";
+    if(mode==="LONG_TERM") interval="W";
+
+    tv_iframe.src=
+        "https://www.tradingview.com/widgetembed/?"+
+        "symbol="+symbol+
+        "&exchange=NSE"+
+        "&interval="+interval+
+        "&hidesidetoolbar=1"+
+        "&hidetoptoolbar=1"+
+        "&theme=light"+
+        "&timezone=Asia%2FKolkata";
+}
+
+function closeModal(e){
+    if(!e || e.target.id==="modal"){
+        modal.style.display="none";
+    }
+}
+</script>
+
+</body>
+</html>
