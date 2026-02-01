@@ -317,16 +317,16 @@ def scan():
             # Apply appropriate logic
             if mode == "INTRADAY":
                 score, bias, reasons, sl, tgt, rr = intraday_logic(df)
-                min_score = 60  # Stricter for intraday
+                min_score = 55  # Balanced threshold
             elif mode == "SWING":
                 score, bias, reasons, sl, tgt, rr = swing_logic(df)
-                min_score = 60
+                min_score = 55
             else:  # LONG_TERM
                 score, bias, reasons, sl, tgt, rr = longterm_logic(df)
-                min_score = 55
+                min_score = 50
 
             # Only include if score meets threshold AND decent risk-reward
-            if score >= min_score and rr >= 1.5:
+            if score >= min_score and rr >= 1.2:
                 current_price = round(df['Close'].iloc[-1], 2)
                 
                 results.append({
@@ -351,8 +351,8 @@ def scan():
             print(f"Error processing {s}: {e}")
             continue
 
-    # Sort by score and return top 8
-    final = sorted(results, key=lambda x: x['score'], reverse=True)[:8]
+    # Sort by score and return top 10
+    final = sorted(results, key=lambda x: x['score'], reverse=True)[:10]
     return jsonify({"status": "success", "data": final})
 
 # ================== CHART DATA ==================
